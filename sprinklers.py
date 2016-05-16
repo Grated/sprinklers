@@ -1,14 +1,14 @@
 from datetime import datetime
 from datetime import timedelta
 import json
-#import serial
+import serial
 import sys
 import time
 
-#ser = serial.Serial(
-#    port=sys.argv[1],
-#    baudrate=9600
-#)
+ser = serial.Serial(
+    port=sys.argv[1],
+    baudrate=9600
+)
 
 # How frequently we'll check to see if it's time to run.
 update_rate = timedelta(seconds=30)
@@ -28,26 +28,27 @@ start_time_range += 2* update_rate
 
 print("Entering loop, sprinklers will run when time is between: " + str(start_time) + " and " + str(start_time_range))
 
-#exit = False
-#while(not exit):
-#    current_time = datetime.now()
-#    print(current_time)
-#
-#    if (current_time > start_time and current_time < start_time_range):
-#        print("Starting schedule: " + schedule['name'])
-#        exit = True
-#    else:
-#        print("Sleeping...")
-#        time.sleep(update_rate.seconds)
+exit = False
+while(not exit):
+    current_time = datetime.now()
+    print(current_time)
+
+    if (current_time > start_time and current_time < start_time_range):
+        print("Starting schedule: " + schedule['name'])
+        exit = True
+    else:
+        print("Sleeping...")
+        time.sleep(update_rate.seconds)
 
 for entry in schedule['schedule']:
     station = entry['station']
     time_in_minutes = int(entry['runtime'])
 
     print("Starting station: " + station + ", will run for " + str(time_in_minutes) + " minutes")
-#    ser.write(station.encode('utf-8'))
-#    time.sleep(10*60)
+    ser.write(station.encode('utf-8'))
+    time.sleep(10*60)
 
-#ser.write('0'.encode('utf-8'))
-#ser.close()
+ser.write('0'.encode('utf-8'))
+ser.close()
 print("Schedule complete... Exiting!")
+
