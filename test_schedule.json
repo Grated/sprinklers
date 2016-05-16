@@ -1,0 +1,47 @@
+{
+  "name" : "Nightly",
+  "time" : "6:42PM",
+
+  "schedule" : [
+    {
+      "station" : "1",
+      "runtime" : "5"
+    },
+    {
+      "station" : "2",
+      "runtime" : "5"
+    },
+    {
+      "station" : "3",
+      "runtime" : "5"
+    },
+    {
+      "station" : "1",
+      "runtime" : "5"
+    },
+    {
+      "station" : "2",
+      "runtime" : "5"
+    },
+    {
+      "station" : "3",
+      "runtime" : "5"
+    },
+    {
+      "station" : "4",
+      "runtime" : "15"
+    },
+    {
+      "station" : "5",
+      "runtime" : "10"
+    },
+    {
+      "station" : "6",
+      "runtime" : "10"
+    },
+    {
+      "station" : "7",
+      "runtime" : "15"
+    }
+  ]
+}
