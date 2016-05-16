@@ -48,33 +48,6 @@ for entry in schedule['schedule']:
 #    ser.write(station.encode('utf-8'))
 #    time.sleep(10*60)
 
-
-#print("Starting zone 1")
-#ser.write('1'.encode('utf-8'))
-#
-#print("Starting zone 2")
-#ser.write('2'.encode('utf-8'))
-#time.sleep(10*60)
-#
-#print("Starting zone 3")
-#ser.write('3'.encode('utf-8'))
-#time.sleep(10*60)
-#
-#print("Starting zone 4")
-#ser.write('4'.encode('utf-8'))
-#time.sleep(15*60)
-#
-#print("Starting zone 5")
-#ser.write('5'.encode('utf-8'))
-#time.sleep(15*60)
-#
-#print("Starting zone 6")
-#ser.write('6'.encode('utf-8'))
-#time.sleep(15*60)
-#
-#print("Starting zone 7")
-#ser.write('7'.encode('utf-8'))
-#time.sleep(15*60)
-#
 #ser.write('0'.encode('utf-8'))
 #ser.close()
+print("Schedule complete... Exiting!")
