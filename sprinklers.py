@@ -4,17 +4,50 @@ import json
 import serial
 import sys
 import time
+import signal
 
+
+# Initialize serial port to 9600 baud - that's what the arduino uses.
 ser = serial.Serial(
     port=sys.argv[1],
     baudrate=9600
 )
 
+def shutdown_sprinklers():
+    """
+    Shuts down and exits.
+    """
+    print("Shutting off sprinklers and exiting")
+    ser.write('0'.encode('utf-8'))
+    ser.close()
+    sys.exit()
+
+def switch_to_station(station):
+    """
+    Changes sprinkler station.
+    Disables all sprinklers for a short period to let the previous station
+    finish, then starts the next station.
+    """
+    print("Start station change")
+    ser.write('0'.encode('utf-8'))
+    time.sleep(5)
+    ser.write(station.encode('utf-8'))
+    print("End station change")
+
+def signal_handler(signal, fame):
+    """
+    Handles signals, duh.
+    """
+    shutdown_sprinklers()
+
+# Capture CTRL-C.
+signal.signal(signal.SIGINT, signal_handler)
+
 # How frequently we'll check to see if it's time to run.
 update_rate = timedelta(seconds=30)
 
 # Suck up the json and load its values.
-schedule = json.loads(open('test_schedule.json').read())
+schedule = json.loads(open(sys.argv[2]).read())
 
 # Convert the time in the schedule to a time today.
 schedule_time = datetime.strptime(schedule["time"], '%I:%M%p')
@@ -44,10 +77,9 @@ for entry in schedule['schedule']:
     time_in_minutes = int(entry['runtime'])
 
     print(str(datetime.now()) + " : Starting station " + station + ", will run for " + str(time_in_minutes) + " minutes")
-    ser.write(station.encode('utf-8'))
+    switch_to_station(station)
     time.sleep(time_in_minutes * 60)
 
-ser.write('0'.encode('utf-8'))
-ser.close()
 print("Schedule complete... Exiting!")
+shutdown_sprinklers()
 
