@@ -86,7 +86,6 @@ def schedule_loader():
             for file in os.listdir(sys.argv[2]):
                 if file.endswith(".json"):
                     file = sys.argv[2] + "/" + file
-                    print("Loading... " + file)
 
                     # Suck up the json and load its values.
                     schedule = json.loads(open(file).read())
