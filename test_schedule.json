@@ -1,6 +1,8 @@
 {
-  "name" : "Nightly",
-  "time" : "7:55PM",
+  "name" : "Thorough",
+  "time" : "10:28AM",
+  "daymod" : "1",
+
 
   "schedule" : [
     {

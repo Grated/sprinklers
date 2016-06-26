@@ -1,6 +1,7 @@
 {
-  "name" : "Nightly",
-  "time" : "8:35PM",
+  "name" : "Rotors",
+  "time" : "10:28AM",
+  "daymod" : "3",
 
   "schedule" : [
     {
