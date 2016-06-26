@@ -80,6 +80,12 @@ def schedule_loader():
                 start_time_range = start_time
                 start_time_range += 2 * update_rate
 
+                # Check if it's the right day.
+                days_since_epoch = (datetime.utcnow() - datetime(1970, 1, 1)).days
+                if (days_since_epoch % int(schedule['daymod'])) != 0:
+                    # Skip this schedule
+                    continue
+
                 # Check if it's time to execute.
                 current_time = datetime.now()
                 if current_time > start_time and current_time < start_time_range:
