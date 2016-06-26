@@ -61,40 +61,56 @@ def switch_to_station(station):
 def schedule_loader():
     """
     Function to load schedules and queue those that are ready to be executed.
+
+    Checks schedules every minute to see if they should be run.
+
     :return:
     """
+
+    # How frequently we'll check to see if it's time to run.
+    one_minute = timedelta(minutes=1)
+
+    # How frequently we wake up to see if it's a new minute.
+    # Short enough to not be a bother when shutting down.
+    sleep_time = timedelta(seconds=5)
+
+    # The next time we should execute
+    next_run = datetime.now() + one_minute
+
     while not end_program:
-        for file in os.listdir(sys.argv[2]):
-            if file.endswith(".json"):
-                file = sys.argv[2] + "/" + file
-                print("Loading... " + file)
+        current_time = datetime.now()
 
-                # Suck up the json and load its values.
-                schedule = json.loads(open(file).read())
+        if current_time >= next_run:
+            next_run = datetime.now() + one_minute
 
-                # Convert the time in the schedule to a time today.
-                schedule_time = datetime.strptime(schedule["time"], '%I:%M%p')
-                start_time = datetime.combine(datetime.today(), schedule_time.time())
+            for file in os.listdir(sys.argv[2]):
+                if file.endswith(".json"):
+                    file = sys.argv[2] + "/" + file
+                    print("Loading... " + file)
 
-                # If the current time falls within this range we'll start the sprinklers.
-                # Double the update_rate to ensure we don't miss the window.
-                start_time_range = start_time
-                start_time_range += 2 * update_rate
+                    # Suck up the json and load its values.
+                    schedule = json.loads(open(file).read())
 
-                # Check if it's the right day.
-                days_since_epoch = (datetime.utcnow() - datetime(1970, 1, 1)).days
-                if (days_since_epoch % int(schedule['daymod'])) != 0:
-                    # Skip this schedule
-                    continue
+                    # Convert the time in the schedule to a time today.
+                    schedule_time = datetime.strptime(schedule["time"], '%I:%M%p')
+                    start_time = datetime.combine(datetime.today(), schedule_time.time())
 
-                # Check if it's time to execute.
-                current_time = datetime.now()
-                if current_time > start_time and current_time < start_time_range:
-                    # Queue the schedule for execution.
-                    print(str(current_time) + ": Queueing schedule: " + schedule['name'])
-                    schedule_queue.put(schedule)
+                    # Check if it's the right day.
+                    days_since_epoch = (datetime.utcnow() - datetime(1970, 1, 1)).days
+                    if (days_since_epoch % int(schedule['daymod'])) != 0:
+                        # Skip this schedule
+                        continue
 
-        time.sleep(update_rate.seconds)
+                    # Execute if the current time falls within the minute the
+                    # schedule should be run.
+                    if current_time >= start_time and current_time < (start_time + one_minute):
+                        # Queue the schedule for execution.
+                        print(str(current_time) + ": Queueing schedule: " + schedule['name'])
+                        schedule_queue.put(schedule)
+                # Else it's not a schedule file
+            # End for
+        # Else we don't run
+        time.sleep(sleep_time.seconds)
 
 
 def signal_handler(signal, fame):
@@ -105,9 +121,6 @@ def signal_handler(signal, fame):
 
 # Capture CTRL-C.
 signal.signal(signal.SIGINT, signal_handler)
-
-# How frequently we'll check to see if it's time to run.
-update_rate = timedelta(seconds=30)
 
 # Queue containing schedules that need to be executed.
 schedule_queue = queue.Queue()
