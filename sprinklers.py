@@ -64,8 +64,9 @@ def schedule_loader():
     :return:
     """
     while not end_program:
-        for file in os.listdir("./"):
+        for file in os.listdir(sys.argv[2]):
             if file.endswith(".json"):
+                file = sys.argv[2] + "/" + file
                 print("Loading... " + file)
 
                 # Suck up the json and load its values.
@@ -121,7 +122,6 @@ while not end_program:
         schedule = schedule_queue.get(timeout=1)
     except queue.Empty:
         # The queue will be empty quite often.
-        end_program = True
         pass
     else:
         print(str(datetime.now()) + " : Executing schedule: " + schedule['name'])
