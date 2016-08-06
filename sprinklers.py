@@ -145,6 +145,8 @@ while not end_program:
             switch_to_station(station)
             time.sleep(time_in_minutes * 60)
 
+        # Turn off sprinklers, but don't exit program
+        switch_to_station('0')
         print("Schedule complete.")
 
 print("Joining threads...")
