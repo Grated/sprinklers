@@ -121,6 +121,9 @@ def signal_handler(signal, fame):
 # Capture CTRL-C.
 signal.signal(signal.SIGINT, signal_handler)
 
+# Ensure the sprinklers are off.
+switch_to_station('0')
+
 # Queue containing schedules that need to be executed.
 schedule_queue = queue.Queue()
 
